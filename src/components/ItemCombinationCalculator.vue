@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import { type CombinationFinder, DPCombinationFinder, DFSCombinationFinder } from './combinationFinders';
+import { type CombinationFinder, DPCombinationFinder, DFSCombinationFinder, type CombinationResult } from './combinationFinders';
 
 interface Item {
   name: string;
   price: number;
   minCount: number;
   maxCount: number;
-}
-interface CombinationResult {
-  counts: number[];
-  total: number;
 }
 const newItem = reactive({
   name: '',
@@ -130,8 +126,8 @@ const calculateCombinations = () => {
     
     <tr v-for="(result, index) in results" :key="index">
       <td>
-        <span v-for="(count, itemIndex) in result.counts" :key="itemIndex">
-          {{ items[itemIndex].name }}: {{ count }},
+        <span v-for="(r, itemIndex) in result.items" :key="itemIndex">
+          {{ r.name }}-{{ r.price }}: {{ r.count }}<template v-if="itemIndex<result.items.length-1">, </template>
         </span>
       </td>
       <td>{{ formatPrice(result.total) }}</td>
@@ -149,7 +145,7 @@ const calculateCombinations = () => {
 .item-form, .target-form, .results {
   margin-bottom: 20px;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-background-mute);
   border-radius: 5px;
 }
 .form-group {
@@ -181,11 +177,11 @@ table {
   margin-top: 10px;
 }
 th, td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-background-mute);
   padding: 8px;
   text-align: left;
 }
 th {
-  background-color: #f2f2f2;
+  background-color: var(--color-background-soft);
 }
 </style>

@@ -5,8 +5,14 @@ export interface Item {
   maxCount: number;
 }
 
+export interface CombinationItem {
+  name: string;
+  count: number;
+  price: number;
+}
+
 export interface CombinationResult {
-  counts: number[];
+  items: CombinationItem[];
   total: number;
   difference: number;
 }
@@ -18,6 +24,7 @@ export interface CombinationFinder {
 export class DPCombinationFinder implements CombinationFinder {
   findCombinations(items: Item[], targetPrice: number): CombinationResult[] {
     const formattedItems = items.map(item => ({
+      name: item.name,
       price: item.price,
       minCount: item.minCount || 0,
       maxCount: item.maxCount || Infinity
@@ -36,8 +43,21 @@ export class DPCombinationFinder implements CombinationFinder {
       if (index === n) {
         if (currentPrice >= targetPrice) {
           const difference = currentPrice - targetPrice;
+          
+          // Create combination items with names
+          const combinationItems: CombinationItem[] = [];
+          for (let i = 0; i < n; i++) {
+            if (currentCounts[i] > 0) {
+              combinationItems.push({
+                name: formattedItems[i].name,
+                count: currentCounts[i],
+                price: formattedItems[i].price
+              });
+            }
+          }
+          
           const result = {
-            counts: [...currentCounts],
+            items: combinationItems,
             total: currentPrice,
             difference
           };
@@ -86,6 +106,7 @@ export class DPCombinationFinder implements CombinationFinder {
 export class DFSCombinationFinder implements CombinationFinder {
   findCombinations(items: Item[], targetPrice: number): CombinationResult[] {
     const formattedItems = items.map(item => ({
+      name: item.name,
       price: item.price,
       minCount: item.minCount || 0,
       maxCount: item.maxCount || Infinity
@@ -104,8 +125,21 @@ export class DFSCombinationFinder implements CombinationFinder {
       if (index === n) {
         if (currentPrice >= targetPrice) {
           const difference = currentPrice - targetPrice;
+          
+          // Create combination items with names
+          const combinationItems: CombinationItem[] = [];
+          for (let i = 0; i < n; i++) {
+            if (currentCounts[i] > 0) {
+              combinationItems.push({
+                name: formattedItems[i].name,
+                count: currentCounts[i],
+                price: formattedItems[i].price
+              });
+            }
+          }
+          
           const result = {
-            counts: [...currentCounts],
+            items: combinationItems,
             total: currentPrice,
             difference
           };
